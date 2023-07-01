@@ -25,6 +25,9 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool.ScrapData;
+
+import com.tencent.mtt.hippy.views.hippylist.HippyListUtils;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -102,19 +105,21 @@ public class RecyclerViewBase extends RecyclerView {
     }
 
     public void enableOverPullIfNeeded() {
-        LayoutManager layoutManager = getLayoutManager();
-        boolean isVertical = (layoutManager != null) ? layoutManager.canScrollVertically() : false;
-        if (enableOverDrag && isVertical) {
-            if (overPullHelper == null) {
-                overPullHelper = new HippyOverPullHelper(this);
-            }
-            overPullHelper.setOverPullListener(overPullListener);
-        } else {
+        if (!enableOverDrag) {
             if (overPullHelper != null) {
                 overPullHelper.destroy();
+                overPullHelper = null;
             }
-            overPullHelper = null;
+            return;
         }
+        if (getLayoutManager() == null) {
+            return;
+        }
+        boolean isVertical = HippyListUtils.isVerticalLayout(this);
+        if (overPullHelper == null || overPullHelper.isVertical() != isVertical) {
+            overPullHelper = new HippyOverPullHelper(this, isVertical);
+        }
+        overPullHelper.setOverPullListener(overPullListener);
     }
 
     public void setEnableOverPull(boolean enableOverDrag) {

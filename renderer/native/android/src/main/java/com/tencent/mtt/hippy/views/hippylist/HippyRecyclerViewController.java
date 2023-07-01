@@ -129,9 +129,7 @@ public class HippyRecyclerViewController<HRW extends HippyRecyclerViewWrapper> e
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.initRecyclerView(hasStableIds);
         recyclerView.getRecyclerViewEventHelper().setOnScrollEventEnable(enableScrollEvent);
-        if (HippyListUtils.isVerticalLayout(recyclerView)) {
-            recyclerView.setEnableOverPull(enableOverPull);
-        }
+        recyclerView.setEnableOverPull(enableOverPull);
         if (context instanceof NativeRenderContext) {
             int rootId = ((NativeRenderContext) context).getRootId();
             if (rootId == SCREEN_SNAPSHOT_ROOT_ID) {
